@@ -1,8 +1,10 @@
 
+
+https://youtu.be/ydxEeVAqVdo?si=oeaQOZuOEZuKaHvX
+
 # 1 理论 
 
 private Subnet can not download packages form internet 
-
 
 从内部经过 NAT Gateway 访问互联网是可能的 
 
@@ -56,10 +58,13 @@ so the private subnet can connect to NAT Gateway
 
 
 
+
 6 create Ec2 instance in public subnet and private subnet 
 在创造 EC2 instance 的时候， 就顺便把 security group 给创造了 
 
  看到 private EC2 Instance 没有 public ip addresse , 只有 private ipv4 addresse. 所以 无法送互联网直接访问 这个 instance 
+ (auto-assign publoic IP 选为 Disable)
+ ![](image/Pasted%20image%2020240221192631.png)
  
  ![](image/Pasted%20image%2020240221180605.png)
 
@@ -74,5 +79,6 @@ login ec2 instance in public subnet , then 在 这个 ec2 instance 中 去 login
 
 
 ![](image/Pasted%20image%2020240221181003.png)
+
 
 
