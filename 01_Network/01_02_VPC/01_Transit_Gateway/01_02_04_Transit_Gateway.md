@@ -1,9 +1,21 @@
 
 https://docs.aws.amazon.com/vpc/latest/tgw/how-transit-gateways-work.html
 
+# 1 总览
 
+The following diagram shows a transit gateway with three VPC attachments. The route table for each of these VPCs includes the local route and routes that send traffic destined for the other two VPCs to the transit gateway.
 
-# 1 Transit Gateway Attachment 
+![](image/Pasted%20image%2020240307111045.png)
+
+The following is an example of a default transit gateway route table for the attachments shown in the previous diagram. The CIDR blocks for each VPC propagate to the route table. Therefore, each attachment can route packets to the other two attachments.
+
+|Destination|Target|Route type|
+|---|---|---|
+|`VPC A CIDR`|`Attachment for VPC A`|propagated|
+|`VPC B CIDR`|`Attachment for VPC B`|propagated|
+|`VPC C CIDR`|`Attachment for VPC C`|propagated|
+
+# 2 Transit Gateway Attachment 
 
 将 transit Gateway 和某一个资源绑定。 就会产生 产生一个 attachement , 这个 attachment 有独立的 id 
 
@@ -17,7 +29,7 @@ A transit gateway attachment is both a source and a destination of packets. You 
 - A transit gateway attachment can be both a source and a destination of packets
 
 
-# 2 Routing
+# 3 Routing
 
 Your transit gateway routes IPv4 and IPv6 packets between attachments using transit gateway route tables. You can configure these route tables to propagate routes from the route tables for the attached VPCs, VPN connections, and Direct Connect gateways. 
 You can also add static routes to the transit gateway route tables. When a packet comes from one attachment, it is routed to another attachment using the route that matches the destination IP address.
@@ -26,7 +38,7 @@ For transit gateway peering attachments, only static routes are supported.
 
 ![](image/Pasted%20image%2020240305173703.png)
 
-## 2.1 Route Association and Route Propagation
+## 3.1 Route Association and Route Propagation
 
 
 https://nileshjoshi.medium.com/overview-of-transit-vpc-aws-transit-gateway-deep-dive-37631fb2a6f6
@@ -38,7 +50,7 @@ Nice! We are done with VPC attachments and now it’s time to associate these at
     Propagation: TO which Attachment(VPC/VPN) traffic can be routed to. You can create a propagation of transit gateway attachment with multiple route tables.
 
 
-## 2.2 route table
+## 3.2 route table
 
 https://docs.aws.amazon.com/vpc/latest/tgw/how-transit-gateways-work.html#tgw-route-tables-overview
 
@@ -54,7 +66,8 @@ The following example shows a VPC route table. The VPC local route has the highe
 |172.31.0.0/16|vgw-12345 (propagated)|3|
 |0.0.0.0/0|igw-12345|4|
 
-The following example shows a transit gateway route table. If you prefer the AWS Direct Connect gateway attachment to the VPN attachment, use a BGP VPN connection and propagate the routes in the transit gateway route table.
+The following example shows a transit gateway route table. 
+If you prefer the AWS Direct Connect gateway attachment to the VPN attachment, use a BGP VPN connection and propagate the routes in the transit gateway route table.
 
 | Destination    | Attachment (Target)                    | Resource type              | Route type           | Priority |
 | -------------- | -------------------------------------- | -------------------------- | -------------------- | -------- |
