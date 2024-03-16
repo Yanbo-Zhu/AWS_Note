@@ -23,6 +23,7 @@ Network ACL：
 - 每一个Subnet都有对应的Network ACL。 
 - Stateless 防火墙: 不管你的流量是主动发起的请求流量，还是服务端的响应流量，都需要检查相应的访问控制规则. 
     - you must explicitly allow traffic in both directions.
+    - subnets network ACLs are stateless , both inbound and outbound rules need to be updated to enable communication between the web and database tier 
 
 关于修改inbound and outbound rule：You can modify the rules for a security group at any time; you can’t modify the rules for a network ACL until you disassociate it from the subnet.
 You can’t block specific IP addresses using a security group; you can block specific IP addresses using a network ACL.
@@ -67,4 +68,14 @@ Network ACL：
 另外，默认的security group允许同一个security group里边的主机通讯，即使是跨不同subnet的主机，Security group允许同一个Security group的instances之间互相访问，是由如下这条规则决定的，可以看到允许source是这个security group本身的主机访问，也就是允许该security group内所有资源互相访问。
 
 ![](image/Pasted%20image%2020240224155728.png)
+
+
+
+<u>NAT gateway 应该被 安放在 public subnet</u>
+Provision a NAT gateway in a public subnet, the private subnet's route tables can be modified to add a default route the point to the NAT gateway. This configuration ensures that outbound internet traffic form the ec2 instance in the private subnets is routed through the NAT gateway, allowing them to comuincation with xx server im internet.
+
+Provisoin a NAT gateway in a private subnet would not allow the ec2 instances in the private subnets to commmunicate with internt. 
+
+NAT gateway are designed to be deployed in oublic subnets to provide internet connectitivity to private subnets.
+
 
