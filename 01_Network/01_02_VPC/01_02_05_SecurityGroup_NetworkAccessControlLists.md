@@ -79,3 +79,108 @@ Provisoin a NAT gateway in a private subnet would not allow the ec2 instances in
 NAT gateway are designed to be deployed in oublic subnets to provide internet connectitivity to private subnets.
 
 
+
+# 4 ephemeral port 
+
+
+https://www.quora.com/What-is-an-ephemeral-port-in-AWS
+
+
+Ephemeral ports are used for communication from the client to the server in AWS (and any TCP communication in other clouds or traditional data centers), and also for the communication from the server in Cloud to client on premises 
+Ephemeral ports are short-lived, and selected at random from a specific range.
+
+## 4.1 Why is it used for
+https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html
+
+nACL 设置 
+
+Inbound
+
+| Rule # | Type        | Protocol | Port range  | Source       | Allow/Deny | Comments                                                                                                                                         |
+| ------ | ----------- | -------- | ----------- | ------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 100    | HTTP        | TCP      | 80          | 0.0.0.0/0    | ALLOW      | Allows inbound HTTP traffic from any IPv4 address.                                                                                               |
+| 105    | HTTP        | TCP      | 80          | ::/0         | ALLOW      | Allows inbound HTTP traffic from any IPv6 address.                                                                                               |
+| 110    | HTTPS       | TCP      | 443         | 0.0.0.0/0    | ALLOW      | Allows inbound HTTPS traffic from any IPv4 address.                                                                                              |
+| 115    | HTTPS       | TCP      | 443         | ::/0         | ALLOW      | Allows inbound HTTPS traffic from any IPv6 address.                                                                                              |
+| 120    | SSH         | TCP      | 22          | 192.0.2.0/24 | ALLOW      | Allows inbound SSH traffic from your home network's public IPv4 address range (over the internet gateway).                                       |
+| 130    | RDP         | TCP      | 3389        | 192.0.2.0/24 | ALLOW      | Allows inbound RDP traffic to the web servers from your home network's public IPv4 address range (over the internet gateway).                    |
+| 140    | Custom TCP  | TCP      | 32768-65535 | 0.0.0.0/0    | ALLOW      | Allows inbound return IPv4 traffic from the internet (that is, for requests that originate in the subnet).<br><br>This range is an example only. |
+| 145    | Custom TCP  | TCP      | 32768-65535 | ::/0         | ALLOW      | Allows inbound return IPv6 traffic from the internet (that is, for requests that originate in the subnet).<br><br>This range is an example only. |
+| *      | All traffic | All      | All         | 0.0.0.0/0    | DENY       | Denies all inbound IPv4 traffic not already handled by a preceding rule (not modifiable).                                                        |
+| *      | All traffic | All      | All         | ::/0         | DENY       | Denies all inbound IPv6 traffic not already handled by a preceding rule (not modifiable).                                                        |
+
+-----
+
+
+Outbound
+
+| Rule # | Type        | Protocol | Port range  | Destination | Allow/Deny | Comments                                                                                                                                                                          |
+| ------ | ----------- | -------- | ----------- | ----------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 100    | HTTP        | TCP      | 80          | 0.0.0.0/0   | ALLOW      | Allows outbound IPv4 HTTP traffic from the subnet to the internet.                                                                                                                |
+| 105    | HTTP        | TCP      | 80          | ::/0        | ALLOW      | Allows outbound IPv6 HTTP traffic from the subnet to the internet.                                                                                                                |
+| 110    | HTTPS       | TCP      | 443         | 0.0.0.0/0   | ALLOW      | Allows outbound IPv4 HTTPS traffic from the subnet to the internet.                                                                                                               |
+| 115    | HTTPS       | TCP      | 443         | ::/0        | ALLOW      | Allows outbound IPv6 HTTPS traffic from the subnet to the internet.                                                                                                               |
+| 140    | Custom TCP  | TCP      | 32768-65535 | 0.0.0.0/0   | ALLOW      | Allows outbound IPv4 responses to clients on the internet (for example, serving webpages to people visiting the web servers in the subnet).<br><br>This range is an example only. |
+| 145    | Custom TCP  | TCP      | 32768-65535 | ::/0        | ALLOW      | Allows outbound IPv6 responses to clients on the internet (for example, serving webpages to people visiting the web servers in the subnet).<br><br>This range is an example only. |
+| *      | All traffic | All      | All         | 0.0.0.0/0   | DENY       | Denies all outbound IPv4 traffic not already handled by a preceding rule (not modifiable).                                                                                        |
+| *      | All traffic | All      | All         | ::/0        | DENY       | Denies all outbound IPv6 traffic not already handled by a preceding rule (not modifiable).                                                                                        |
+
+1 From Client in Internet to Server in AWS 
+You want to open a web page on your browser (client), so you connect to www.example.com, (server) and use the port 80 (default for HTTP) to establish a connection. Your computer selects a random port from range 1024–65535 if Linux or 49152–65535 for windows. The connection is established, and the data exchange begins, after the connection is finished the port is closed, new connections will open a new ephemeral port on the client side.
+
+比如说你设置了 
+
+nACL Outbound rule 
+
+| 110    | HTTPS       | TCP      | 443         | 0.0.0.0/0    | ALLOW      | Allows inbound HTTPS traffic from any IPv4 address.                                                                                              |
+| ------ | ----------- | -------- | ----------- | ------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+
+
+nACL Inbound Rule 
+
+| 140 | Custom TCP | TCP | 32768-65535 | 0.0.0.0/0 | ALLOW | Allows inbound return IPv4 traffic from the internet (that is, for requests that originate in the subnet).<br><br>This range is an example only. |
+| --- | ---------- | --- | ----------- | --------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+
+当 server in aws 发送一个 request to client  in Internet, 
+这个 request 返回的 信息 会 在 port range 32768-65535 中 随便找个 port 开启, 将 信息 从 Client in Internet   send to server in AWS 
+这个开启的 port 会被 obliviated afterwards 
+
+
+----
+
+2 From Server in AWS to Client in Internet
+
+nACL Inbound Rule 
+
+| 110    | HTTPS       | TCP      | 443         | 0.0.0.0/0    | ALLOW      | Allows inbound HTTPS traffic from any IPv4 address.                                                                                              |
+| ------ | ----------- | -------- | ----------- | ------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+
+nACL outbound rule 
+
+| 140    | Custom TCP  | TCP      | 32768-65535 | 0.0.0.0/0   | ALLOW      | Allows outbound IPv4 responses to clients on the internet (for example, serving webpages to people visiting the web servers in the subnet).<br><br>This range is an example only. |
+| ------ | ----------- | -------- | ----------- | ----------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+
+
+当 Client in Internet 发送一个 request to server in aws, 
+这个 request 返回的 信息 会 在 port range 32768-65535 中 随便找个 port 开启, 将 信息 从  server in AWS   send to Client in Internet 
+这个开启的 port 会被 obliviatedd afterwards 
+
+## 4.2 Why is it important on AWS?
+In Amazon VPC we can block (or allow) traffic using security groups (SG) and Network Access Control Lists (nACL). We can control inbound traffic and outbound traffic with specific rules, using IP and port ranges. For SG ephemeral ports are always obliviated, but we must consider them when using nACL, make sure the ephemeral ports are allowed.
+
+## 4.3 Ephemeral ports number
+
+you might want to use a different range for your network ACLs depending on the type of client that you're using or with which you're communicating.
+The client that initiates the request chooses the ephemeral port range. The range varies depending on the client's operating system.
+- Many Linux kernels (including the Amazon Linux kernel) use ports 32768-61000.
+- Requests originating from Elastic Load Balancing use ports 1024-65535.
+- Windows operating systems through Windows Server 2003 use ports 1025-5000.
+- Windows Server 2008 and later versions use ports 49152-65535.
+- A NAT gateway uses ports 1024-65535.
+- AWS Lambda functions use ports 1024-65535.
+
+For example, if a request comes into a web server in your VPC from a Windows 10 client on the internet, your network ACL must have an outbound rule to enable traffic destined for ports 49152-65535.
+
+If an instance in your VPC is the client initiating a request, your network ACL must have an inbound rule to enable traffic destined for the ephemeral ports specific to the type of instance (Amazon Linux, Windows Server 2008, and so on).
+
+In practice, to cover the different types of clients that might initiate traffic to public-facing instances in your VPC, you can open ephemeral ports 1024-65535. However, you can also add rules to the ACL to deny traffic on any malicious ports within that range. Ensure that you place the _deny_ rules earlier in the table than the _allow_ rules that open the wide range of ephemeral ports.
