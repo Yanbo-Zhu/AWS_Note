@@ -6,9 +6,10 @@ https://youtu.be/ydxEeVAqVdo?si=oeaQOZuOEZuKaHvX
 
 ## 1.1 理论 
 
-private Subnet can not download packages form internet 
-
+private Subnet can not download packages form internet
 从内部经过 NAT Gateway 访问互联网是可能的 
+NAT Gateway  不需要和 Internet Gateway 一起使用 
+Create a NAT gateway, and place it in a public subnet. Configure the private subnet route table to use the NAT gateway as the default route.
 
 ![](image/Pasted%20image%2020240221162358.png)
 
@@ -83,6 +84,20 @@ login ec2 instance in public subnet , then 在 这个 ec2 instance 中 去 login
 ![](image/Pasted%20image%2020240221181003.png)
 
 
+## 1.2 private and public NAT gateway
+
+The private NAT gateway can also be used when your on-premises network restricts access to approved IPs
+
+You can use a public NAT gateway to enable instances in a private subnet to send outbound traffic to the internet, while preventing the internet from establishing connections to the instances.
+
+
+Private NAT gateways perform NAT between private IP addresses and resolve the following problems:
+- Private IP address conflicts
+- Access from specified addresses
+
+Public NAT gateways perform NAT between private IP addresses and public IP addresses and have the following advantages:
+- Secure: Only shared EIPs, instead of all EIPs of servers, are exposed to the Internet.
+- Cost-effective: EIPs and bandwidth are shared, saving network infrastructure costs.
 # 2 NAT Instance 
 
 
@@ -99,9 +114,6 @@ A NAT instance provides network address translation (NAT). You can use a NAT ins
 Amazon Web Services (AWS) offers two options for implementing Network Address Translation (NAT) in a Virtual Private Cloud (VPC) — NAT Gateway and NAT Instance.
 
 NAT Gateway is a fully managed service that allows outbound internet access for instances in a private subnet. It automatically scales to handle the increased traffic that your instances generate, and it does not require you to patch or monitor it.
-
-
-
 A NAT Instance, on the other hand, is a custom EC2 instance that you set up and configure to perform NAT. This option gives you more control over the instance, such as the ability to use your own AMI, but also requires you to handle scaling, patching, and monitoring the instance.
 
 
