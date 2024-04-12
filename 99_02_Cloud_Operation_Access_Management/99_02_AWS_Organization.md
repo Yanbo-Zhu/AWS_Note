@@ -564,3 +564,25 @@ https://cloudly.engineer/2021/terraform-aws-multi-account-setup/aws/
 
 https://github.com/infrablocks/terraform-aws-organization
 
+
+# 5 Service control policies (SCPs)
+
+Service Control Policies (SCPs): SCPs are a feature of AWS Organizations that allow you to set fine-grained permissions at the account level. SCPs provide central control over the maximum permissions that can be assigned to an account. They can be used to set restrictions on services, actions, and resource types.
+
+Service control policies (SCPs) are a type of organization policy that you can use to manage permissions in your organization. 
+SCPs offer central control over the maximum available permissions for the IAM users and IAM roles in your organization. SCPs help you to ensure your accounts stay within your organization’s access control guidelines. SCPs are available only in an organization that has [all features enabled](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_support-all-features.html). 
+SCPs aren't available if your organization has enabled only the consolidated billing features. For instructions on enabling SCPs, see [Enabling and disabling policy types](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_enable-disable.html).
+
+
+# 6 AWS Control Tower
+
+Deploy an AWS Control Tower environment in a dedicated Organizations member account. Enable AWS Security Hub and AWS Control Tower Account Factory in the environment.Here's the
+rationale behind this solution:
+
+\l. AWS Control Tower: Deploying an AWS Control Tower environment in a dedicated Organizations member account provides centralized management and governance for all AWS accounts within the organization. It simplifies the process of managing multiple accounts and ensures consistent security and compliance across the organization.
+
+\2. Enable AWS Security Hub: AWS Security Hub is a comprehensive security service that provides a unified view of security findings and compliance checks across all AWS accounts. By enabling AWS Security Hub in the AWS Control Tower environment, you can centralize security findings and compliance data from all AWS accounts.
+
+\3. Enable AWS Control Tower Account Factory: AWS Control Tower Account Factory allows you to create new AWS accounts with pre-defined security and compliance settings. By enabling Account Factory in the AWS Control Tower environment, you can ensure that any new AWS accounts created will have the necessary auditing and compliance features enabled by default.
+
+

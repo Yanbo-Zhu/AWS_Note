@@ -21,12 +21,18 @@ security group：
 Network ACL：
 - 作用于单个subnet里边的所有主机。network ACLs offer similar capabilities at the VPC subnet level
 - 每一个Subnet都有对应的Network ACL。 
+- 所有 traffic to a security group 在默认状态下 都是被否定的 都是被允许的. The default network ACL is configured to allow all traffic to flow in and out of the subnets with which it is associated.
 - Stateless 防火墙: 不管你的流量是主动发起的请求流量，还是服务端的响应流量，都需要检查相应的访问控制规则. 
     - you must explicitly allow traffic in both directions.
     - subnets network ACLs are stateless , both inbound and outbound rules need to be updated to enable communication between the web and database tier 
 
-关于修改inbound and outbound rule：You can modify the rules for a security group at any time; you can’t modify the rules for a network ACL until you disassociate it from the subnet.
-You can’t block specific IP addresses using a security group; you can block specific IP addresses using a network ACL.
+关于修改inbound and outbound rule：
+- You can modify the rules for a security group at any time; 
+- you can’t modify the rules for a network ACL until you disassociate it from the subnet.
+
+block specific IP addresses
+- You can’t block specific IP addresses using a security group; 因为 对于 security group, 默认状态下, 所有的 traffic 都是被 denied. 通过 security group 只能开放某个 traffic. 
+- you can block specific IP addresses using a network ACL. 因为 对于 NACL, 默认状态下, 所有的 traffic 都是被 accpeted. 通过 NACL 只能 deny 某个 traffic. 
 
 ---
 
