@@ -6,7 +6,6 @@ https://www.bilibili.com/video/BV1Fs4y1d7qP/?spm_id_from=333.337.search-card.all
 
 
 
-
 # 1 Create EKS IAM Role
 
 ![](image/Pasted%20image%2020240711204416.png)
