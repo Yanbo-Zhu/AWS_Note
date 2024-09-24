@@ -1,5 +1,3 @@
-
-
 https://shazi.info/aws-resource-access-manager-%E8%A7%A3%E6%B1%BA%E8%B7%A8%E5%B8%B3%E8%99%9F%E7%AE%A1%E7%90%86%E7%9A%84%E5%95%8F%E9%A1%8C%E4%BB%A5%E5%8F%8A%E5%BB%B6%E4%BC%B8%E8%AD%B0%E9%A1%8C/
 
 https://www.infoq.cn/article/96mvi4j0wznejaqhljzz
@@ -89,6 +87,3 @@ RAM 还允许我集中访问我共享的所有资源，以及向我共享的所�
 ![](https://static001.infoq.cn/resource/image/dd/9c/dd5e70c6d9cdb7aae524c40539fa639c.png)
 
 您还可以使用 CreateResourceShare、UpdateResourceShare、GetResourceShareInvitations 和 AcceptResourceShareInvitation 等函数实现共享过程的自动化。当然，您可以使用 IAM 策略来管理这些函数在交易两侧的使用。
-
-
-
