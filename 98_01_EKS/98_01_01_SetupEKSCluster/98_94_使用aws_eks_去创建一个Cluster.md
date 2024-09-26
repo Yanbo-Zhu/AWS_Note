@@ -327,7 +327,7 @@ EKS 不用特別配置 CNI，建置起來就會準備好 DaemonSet，可以透�
 
 建立一個 LC，如下圖：
 
-![](image/launch-configuration.png)
+![](../image/launch-configuration.png)
 
 
 

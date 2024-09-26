@@ -3,19 +3,19 @@ https://www.bilibili.com/video/BV1rV4y1o7bP/?spm_id_from=333.788.recommend_more_
 # 1 Create VPC 
 
 
-![](image/Pasted%20image%2020240712101805.png)
+![](../image/Pasted%20image%2020240712101805.png)
 
 
-![](image/Pasted%20image%2020240712105250.png)
+![](../image/Pasted%20image%2020240712105250.png)
 
 
 ## 1.1 vpc.tf 
 
 引用的了 某个 module 
 
-![](image/Pasted%20image%2020240712103211.png)
+![](../image/Pasted%20image%2020240712103211.png)
 
-![](image/Pasted%20image%2020240712104045.png)
+![](../image/Pasted%20image%2020240712104045.png)
 
 使用的是 terraform registry 中的现成的 tf module 
 
@@ -31,20 +31,20 @@ Description: Should be true to enable DNS hostnames in the VPC
 ---
 
 
-![](image/Pasted%20image%2020240712104918.png)
+![](../image/Pasted%20image%2020240712104918.png)
 
 
 tags 
 For Cloud COntroller Manager 
 指定 这个vpc 是被哪个 eks cluster 使用 ， 例子中 就是被 myapp-eks-cluster 使用 的 vpc
 这其中的量的给出 (this assumption ) 是为了 kubenetes cloud contoller maanger 
-![](image/Pasted%20image%2020240712104338.png)
+![](../image/Pasted%20image%2020240712104338.png)
 
 
 public_subnet_tags
 Description: Additional tags for the public subnets
 
-![](image/Pasted%20image%2020240712104553.png)
+![](../image/Pasted%20image%2020240712104553.png)
 
 
 
@@ -54,7 +54,7 @@ Description: Additional tags for the private subnets
 
 
 还要创造 elb
-![](image/Pasted%20image%2020240712104632.png)
+![](../image/Pasted%20image%2020240712104632.png)
 
 public subnet 的 elb 的作用是 expost the port to outside, get the request from outside , can be accessible for outside, for externals adresse
 
@@ -62,7 +62,7 @@ private subnet
 for services and componets inside the private subnets 
 
 ## 1.2 terraform.tfvars
-![](image/Pasted%20image%2020240712101958.png)
+![](../image/Pasted%20image%2020240712101958.png)
 
 
 
@@ -70,25 +70,25 @@ for services and componets inside the private subnets
 
 1 
 使用的是 terraform registry 中的现成的 tf module 
-![](image/Pasted%20image%2020240712110449.png)
+![](../image/Pasted%20image%2020240712110449.png)
 
 
-![](image/Pasted%20image%2020240712110000.png)
+![](../image/Pasted%20image%2020240712110000.png)
 
 2 
 
-![](image/Pasted%20image%2020240712110655.png)
+![](../image/Pasted%20image%2020240712110655.png)
 
 选的是 Node Group 的方式 
 worker_group参量 
-![](image/Pasted%20image%2020240712110229.png)
+![](../image/Pasted%20image%2020240712110229.png)
 
 
 3  Configure kubenetes provider
 
 https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#authentication
 
-![](image/Pasted%20image%2020240712111834.png)
+![](../image/Pasted%20image%2020240712111834.png)
 
 
 get the info of eks-cluster ， 给到 kubenetes provider 
@@ -101,39 +101,39 @@ host 需要的的是 Endpoint of k8s cluster (API Cluster). (Optional) The hostn
 # 3 Check the cluster 和一起产生的 东西 
 
 1 Cluster 
-![](image/Pasted%20image%2020240712113247.png)
+![](../image/Pasted%20image%2020240712113247.png)
 
-![](image/Pasted%20image%2020240712113255.png)
+![](../image/Pasted%20image%2020240712113255.png)
 
 
 2 Configuration 
-![](image/Pasted%20image%2020240712113307.png)
+![](../image/Pasted%20image%2020240712113307.png)
 
 
 3 一起创造出来的 IAM role
 
-![](image/Pasted%20image%2020240712113354.png)
+![](../image/Pasted%20image%2020240712113354.png)
 
 one for eks 
 one for ec2 
 
 
 4 EC2 instance  
-![](image/Pasted%20image%2020240712113431.png)
+![](../image/Pasted%20image%2020240712113431.png)
 
-![](image/Pasted%20image%2020240712113458.png)
+![](../image/Pasted%20image%2020240712113458.png)
 
 
 5 node 是上一节中 通过 worker_group 创造的 
 
-![](image/Pasted%20image%2020240712113152.png)
+![](../image/Pasted%20image%2020240712113152.png)
 
 
 
 
 # 4 用 vpc module 创造出来的VPC 
 
-![](image/Pasted%20image%2020240712113522.png)
+![](../image/Pasted%20image%2020240712113522.png)
 
 
 
@@ -141,7 +141,7 @@ one for ec2
 
 
 Route table 
-![](image/Pasted%20image%2020240712113604.png)
+![](../image/Pasted%20image%2020240712113604.png)
 
 
 
@@ -149,15 +149,15 @@ Route table
 这个route table 是route request to internet gateway, in order to connect to internet 
 应该是 assocaited with the public subnets 的 
 
-![](image/Pasted%20image%2020240712114555.png)
+![](../image/Pasted%20image%2020240712114555.png)
 
 这个route table 是route request to nat gateway, in order to let worker node connect to master node 
 应该是 assocaited with the private  subnets 的 
 
-![](image/Pasted%20image%2020240712114802.png)
+![](../image/Pasted%20image%2020240712114802.png)
 
 
-![](image/Pasted%20image%2020240712114156.png)
+![](../image/Pasted%20image%2020240712114156.png)
 
 
 
@@ -192,55 +192,55 @@ The order of the routes is irrelevant since the most specific route will be chos
 
 ## 4.2 随着VPC一起创造的Subnets 
 
-![](image/Pasted%20image%2020240712114954.png)
+![](../image/Pasted%20image%2020240712114954.png)
 
-![](image/Pasted%20image%2020240712115018.png)
+![](../image/Pasted%20image%2020240712115018.png)
 
 
 
 ## 4.3 随着VPC一起创造出来的Security group
 
 
-![](image/Pasted%20image%2020240712115102.png)
+![](../image/Pasted%20image%2020240712115102.png)
 
 
 
 这个 SG allows all traffic within this cluster 
-![](image/Pasted%20image%2020240712115434.png)
+![](../image/Pasted%20image%2020240712115434.png)
 
 
 这个 是 worker node 的 SG
 This is for the comunication between the Worker node 
-![](image/Pasted%20image%2020240712115638.png)
+![](../image/Pasted%20image%2020240712115638.png)
 
 
 
 
 
 这个 SG 是为了  communication between master node and worker node 
-![](image/Pasted%20image%2020240712115736.png)
+![](../image/Pasted%20image%2020240712115736.png)
 
-![](image/Pasted%20image%2020240712115609.png)
+![](../image/Pasted%20image%2020240712115609.png)
 
 
 
 
 # 5 connect one worker node with kubectl
 
-![](image/Pasted%20image%2020240712115951.png)
-![](image/Pasted%20image%2020240712120109.png)
+![](../image/Pasted%20image%2020240712115951.png)
+![](../image/Pasted%20image%2020240712120109.png)
 
 update-kubeconfig 
 
- ![](image/Pasted%20image%2020240712120244.png)
+ ![](../image/Pasted%20image%2020240712120244.png)
 
 
 kubectl get node
-![](image/Pasted%20image%2020240712120311.png)
+![](../image/Pasted%20image%2020240712120311.png)
 
 
 kubectl get pod 
-![](image/Pasted%20image%2020240712120347.png)
+![](../image/Pasted%20image%2020240712120347.png)
 
 
 
@@ -259,20 +259,20 @@ kubectl get pod
 
 # 6 deploy a simple application on one worker node 
 
-![](image/Pasted%20image%2020240712120413.png)
+![](../image/Pasted%20image%2020240712120413.png)
 
 
 
 A loadbalancer was created  becuse we create a service wity type Loadbalancer 
-![](image/Pasted%20image%2020240712120437.png)
+![](../image/Pasted%20image%2020240712120437.png)
 
-![](image/Pasted%20image%2020240712120510.png)
+![](../image/Pasted%20image%2020240712120510.png)
 
 关联的都是 public subnet of each AZ 
 
-![](image/Pasted%20image%2020240712120600.png)
+![](../image/Pasted%20image%2020240712120600.png)
 
-![](image/Pasted%20image%2020240712120641.png)
+![](../image/Pasted%20image%2020240712120641.png)
 
 
 
