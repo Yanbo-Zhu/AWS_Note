@@ -5,7 +5,10 @@
 
 # 1 账户A: role with name Remote-Admin 
 
-## 1.1 创建 Remote-Admin role 的Policy
+## 1.1 创建 remote-admin role 这个 role本身
+
+
+## 1.2 创建 Remote-Admin role 的Policy
 
 在 AWS 账户 A（资源账户）中 (mit ID 111111111111)，创建 IAM 角色 Remote-Admin，允许 AWS 账户 B（管理员账户 mit id 222222222222）中的用户访问。
 
@@ -79,14 +82,9 @@ Now only MyAdminRole in account 222222222222 can assume this role.
 ```
 
 
-### 1.1.1 `arn:aws:iam::222222222222:root`
 
 
-
-
-
-
-## 1.2 赋予 Remote-Admin 角色管理员权限 的policy 
+## 1.3 赋予 Remote-Admin role , 管理员权限 的policy 
 
 
 给 Remote-Admin role in 账户a 附加 AdministratorAccess 权限：
