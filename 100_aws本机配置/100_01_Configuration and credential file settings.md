@@ -114,12 +114,14 @@ $ aws ec2 describe-instances --profile user1
 
 # 4 使用`aws configure` Set and view configuration settings 
 
+
 aws configure --profile userprod
 aws configure  ： 填入default 这个 profile 
 
 There are several ways to view and set your configuration settings using commands.
 
 使用 `aws configure` 但是不加上 --profile ， 就会自动 更新的是 default 这个 profile 
+
 ## 4.1 aws configure: 创建新的 profile 
 
 Run this command to quickly set and view your credentials, Region, and output format. The following example shows sample values.
@@ -161,7 +163,7 @@ us-west-2
 
 If the output is empty, the setting is not explicitly set and uses the default value.
 
-## 4.4 aws configure get 
+## 4.4 aws configure list
 
 aws configure list --profile ivu-cloud-e20
 
@@ -180,6 +182,15 @@ $ aws configure list
 access_key     ****************ABCD  shared-credentials-file    
 secret_key     ****************ABCD  shared-credentials-file    
     region                us-west-2             env    AWS_DEFAULT_REGION
+
+
+ ⚡ 🦄  AWS configure list --profile ivu-cloud-e2x
+      Name                    Value             Type    Location
+      ----                    -----             ----    --------
+   profile            ivu-cloud-e2x           manual    --profile
+access_key     ****************632O shared-credentials-file
+secret_key     ****************uBiY shared-credentials-file
+    region             eu-central-1      config-file    ~/.aws/config
 ```
 
 ## 4.5 aws configure list-profiles

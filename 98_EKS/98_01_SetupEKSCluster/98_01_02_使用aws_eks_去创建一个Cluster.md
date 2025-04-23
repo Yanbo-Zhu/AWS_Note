@@ -61,7 +61,7 @@ Commit: c141eda34ad1b6b4d71056810951801348f8c367
 
 準備以下身份給 K8s Cluster 使用：
 - IAM User `au-eks-admin`: 用來建立 EKS Cluster 的 IAM 身份
-- IAM Roles:
+- IAM Roles: 
     - `K8s-Master-Node-Role`: Master Node 的身份，提供以下的 Policies:
         - `AmazonEKSClusterPolicy`
         - `AmazonEKSServicePolicy`
@@ -77,15 +77,18 @@ Commit: c141eda34ad1b6b4d71056810951801348f8c367
 ## IAM Profile  
 AWS_DEFAULT_PROFILE="au-eks-admin"  
 AWS_DEFAULT_REGION="us-west-2"  
-  
+
+
 ## K8S info  
 K8S_CLUSTER_NAME="eks-v114-20191013"  
 K8S_VERSION="1.14"  
+
   
 ## IAM ROLES  
 K8S_MASTER_NODE_ROLE_ARN="arn:aws:iam:::role/K8S-Master-Node-Role"  
 K8S_WORKER_NODE_ROLE_ARN="arn:aws:iam:::role/K8S-Worker-Node-Role"  
-  
+
+
 # VPC: Subnet, Security Groups  
 K8S_WORKER_SUBNETS="subnet-12345678,subnet-12345679"  
 K8S_WORKER_SECURITY_GROUPS="sg-1234567890123456"
@@ -267,6 +270,19 @@ data:
       groups:  
         - system:bootstrappers  
         - system:nodes
+```
+
+
+获取现有 `aws-auth` 配置
+kubectl get configmap aws-auth -n kube-system -o yaml
+
+修改并添加 IAM 用户或角色
+```
+mapUsers: |
+  - userarn: arn:aws:iam::123456789012:user/your-iam-user
+    username: your-k8s-user
+    groups:
+      - system:masters
 ```
 
 

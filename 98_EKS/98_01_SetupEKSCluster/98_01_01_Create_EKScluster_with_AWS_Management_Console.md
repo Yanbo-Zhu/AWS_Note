@@ -16,10 +16,10 @@ https://www.bilibili.com/video/BV1Fs4y1d7qP/?spm_id_from=333.337.search-card.all
 
 # 2 create VPC for EKS worker node 
 
-why do need another VPC: EKS cluster  needs specific networking configuration 
+why do need another VPC: EKS cluster needs specific networking configuration 
 
 1 
-Worker Nodes need specific Firewall configurations, sothat the Master Node can communicate the Worker Node 
+Worker Nodes need specific Firewall configurations, so that the Master Node can communicate the Worker Node 
 ![](../image/Pasted%20image%2020240711205658.png)
 
 Bes practice : configure Public Subnet and Private Subnet 
