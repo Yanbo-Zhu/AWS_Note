@@ -145,6 +145,7 @@ aws eks create-cluster \
 }
 ```
 
+
 接下來要等待大約十分鐘的時間，可以透過以下 CLI 取得 Cluster 狀態
 ```
 ## Status  
@@ -153,10 +154,13 @@ aws eks describe-cluster \
     --name ${K8S_CLUSTER_NAME} \  
     --query cluster.status  
   
+
 "CREATING"  
-  
+
+
 # 大約等十到十五分鐘  
-  
+
+
 "ACTIVE"
 ```
 
@@ -251,7 +255,10 @@ kube-system   pod/coredns-6f647f5754-9xcl2   0/1     Pending   0          17m
 ```
 
 
-## 2.2 配置 ConfigMap for EKS Auth
+## 2.2 配置 ConfigMap for EKS Authentification
+
+
+### 2.2.1 join a worker node with master node 
 
 主要是提供一個 IAM Role 的身份讓 Master Cluster 去管理。修改以下 `aws-auth-cm.yaml` 黨，把其中的 `<ARN of instance role (not instance profile)>` 置換成 Worker Nodes 的 ARN，其他不要動。
 
@@ -272,18 +279,13 @@ data:
         - system:nodes
 ```
 
-
-获取现有 `aws-auth` 配置
-kubectl get configmap aws-auth -n kube-system -o yaml
-
-修改并添加 IAM 用户或角色
-```
-mapUsers: |
-  - userarn: arn:aws:iam::123456789012:user/your-iam-user
-    username: your-k8s-user
-    groups:
-      - system:masters
-```
+- `mapRoles`: 映射一个 IAM **角色** 到 Kubernetes 中的用户和组。
+- `rolearn`: 你需要填的是 EC2 实例的 IAM **角色的 ARN**（注意：**不是 Instance Profile 的 ARN**）。
+- `username`: 定义这个 IAM 实例在 Kubernetes 中的名字。EKS 会用这个名字标识 node（EC2）。
+    - `{{EC2PrivateDNSName}}` 是一个变量，占位符，EKS 会自动替换为该节点的私有 DNS 名称。
+- `groups`: 是这个角色所属于的 Kubernetes **权限组**：
+    - `system:bootstrappers`：用于 kubelet 启动阶段
+    - `system:nodes`：允许 kubelet 以 node 身份与 kube-apiserver 通信
 
 
 直接執行 kubectl apply -f aws-auth-cm.yaml，如下：
@@ -313,6 +315,29 @@ Events:  <none>
 
 
 到此 Master Node 已經完成準備。
+
+
+
+### 2.2.2 修改并添加 IAM 用户或角色
+
+
+获取现有 `aws-auth` 配置
+kubectl get configmap aws-auth -n kube-system -o yaml
+
+修改并添加 IAM 用户或角色
+你贴出的这段是 `aws-auth` ConfigMap 中的 `mapUsers` 配置，用于将一个 IAM 用户映射到 Kubernetes 中的用户并赋予权限。
+```
+mapUsers: |
+  - userarn: arn:aws:iam::123456789012:user/your-iam-user
+    username: your-k8s-user
+    groups:
+      - system:masters
+```
+
+- **`userarn`**: 指向你在 IAM 中的用户 ARN，比如 `arn:aws:iam::123456789012:user/alice`
+- **`username`**: 映射为 Kubernetes 中的用户名，可以自定义
+- **`groups`**:    
+    - `system:masters`: 这个组是 **集群管理员组**，拥有 `cluster-admin` 的全部权限（⚠️ 非常高权限）
 
 ## 2.3 CNI
 
@@ -360,8 +385,8 @@ set -o xtrace
 
 ### 2.4.2 建立 EC2 ASG
 
-建立一個 EC2 ASG，使用前面建立的 LC，如下圖。特別注意的是 Tag 必續指定如下：
-- Key: `kubernetes.io/cluster/<CLUSTER_NAME>`, Value: `owned`
+建立一個 EC2 ASG，使用前面建立的 LC，如下圖。===特別注意的是 Tag 必續指定如下===：
+- Key: `kubernetes.io/cluster/<CLUSTER_NAME>`, Value: `owned` 
 
 如果沒有指定，Worker Node 就無法加入 Cluster。
 ![](image/ec2-auto-scaling-group.png)

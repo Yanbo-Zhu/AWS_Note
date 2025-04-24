@@ -19,13 +19,12 @@ spec:
       targetPort: 8080 # Pod 内部容器监听的端口
 ```
 
+---
+
 
 云平台自动分配 Load Balancer
-
 - **AWS**：创建 ELB（Elastic Load Balancer）
-    
 - **GCP**：创建 GCP Load Balancer
-    
 - **Azure**：创建 Azure Load Balancer
 
 

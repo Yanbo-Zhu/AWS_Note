@@ -1,8 +1,7 @@
 
 SAML (SAML 1.0 and 2.0) and OpenID Connect (OIDC) are identity protocols, designed to authenticate users, and provide identity data for access control and as a communication method for a user’s identity. Either protocol may be the basis for Identity Providers (IdPs) that offer a range of user identity management and services and may be used for single sign-on (SSO) applications.
 
-
-这连个协议用于 Identity Providers (IdPs) 和 single sign-on (SSO) applications
+这个协议用于 Identity Providers (IdPs) 和 single sign-on (SSO) applications
 
 
 # 1 SAML

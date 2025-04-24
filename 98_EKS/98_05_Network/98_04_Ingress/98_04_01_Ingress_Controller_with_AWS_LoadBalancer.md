@@ -8,15 +8,11 @@ ALB:  AWS Applicatiob Load balancer
 
 
 
-# 1 Classic NGINX Ingress + 外部 LoadBalancer（ELB）
-
+# 1 Classic NGINX Ingress + 外部 AWS Elatic LoadBalancer（ELB）
 
 - **部署 NGINX Ingress Controller**。
-    
 - **通过一个 Kubernetes LoadBalancer Service 暴露 Ingress Controller**。
-    
 - AWS 会自动为你创建一个 **Classic ELB 或 NLB**，用于接收外部流量，并将其转发到 Ingress Controller。
-    
 - Ingress Controller 根据规则将流量再转发到内部服务。
 
 
@@ -29,13 +25,45 @@ ALB:  AWS Applicatiob Load balancer
 输出中会有一个 EXTERNAL-IP，即 AWS 创建的 ELB 地址。
 
 
+
+## 1.1 nginx-ingress Controller  and ingress-nginx resource 
+
+Annotations für ingress-nginx:
+```
+nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"            # 30 min server timeout
+nginx.ingress.kubernetes.io/proxy-body-size: "0"                        # no body size limit
+nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"                   # required due to Keycloak
+
+nginx.ingress.kubernetes.io/ssl-redirect: "true" / "false"               # depends on Ingress
+nginx.ingress.kubernetes.io/proxy-read-timeout: "1800"            # 30 min server timeout
+
+# nur für ingress internal oder wenn unterstützt per values direkt values.service.interfaceAnnotation an den -long service: https://git.ivu-ag.com/projects/PTPDELI/repos/ivuplan-chart/browse/templates/ivuplan-long-svc.yaml#10
+
+nginx.ingress.kubernetes.io/proxy-body-size: "0"                        # no body size limit
+```
+
+Und für die ConfigMap von nginx, falls ein Reverse Proxy davorsteht: 
+```
+use-forwarded-headers: "true"   # only if external Reverse Proxy is used in front of Ingress Controller
+```
+
+---
+
+
+Annotations für nginx-ingress:
+```
+ nginx.org/proxy-read-timeout: "1800"            # 30 min server timeout
+ nginx.org/client-max-body-size: "0"                # no body size limit
+ nginx.org/proxy-buffer-size: "16k"                   # required due to Keycloak
+```
+
+
 # 2 使用 AWS ALB（Application Load Balancer）作为 Ingress Controller
 
 这是在 **EKS 中的推荐做法**，更原生、灵活、支持路径和主机名路由。
 
 步骤概览：
 1. 安装 AWS Load Balancer Controller（ALB Controller）
-
 
 ```
 helm repo add eks https://aws.github.io/eks-charts
@@ -83,8 +111,6 @@ spec:
 一旦这个 Ingress 被应用，ALB Controller 会自动在 AWS 上创建一个 **ALB 实例** 来服务此规则。
 
 
-
-
 # 3 Certificate
 
 Eine krasse Einschränkung ist dass das Certificate Management damit wieder nach außerhalb von Kubernetes verlagert wird, weil der ALB Ingress nur Certs benutzen kann die in AWS Certificate Manager vorhanden sind. 
@@ -99,9 +125,6 @@ Man kriegt die Certs für den ALB Ingress über eine Annotation rein:
 https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/guide/ingress/annotations/#certificate-arn
 
 für das was unter "tls:" steht interessiert sich ALB gar nicht. 
-
-
-
 
 
 

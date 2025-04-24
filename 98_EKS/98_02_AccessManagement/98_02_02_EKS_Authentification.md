@@ -19,12 +19,30 @@ Extra: sessionName    [YZH@ivu.de]
 ```
 
 
-# 2 What is AWS IAM Authenticator?
+
+# 2 kubenetes中的RBAC (Rola-based Access Control) 结合AWS中的IAM的user 
+
+![](image/Pasted%20image%2020240711154750.png)
+
+![](image/Pasted%20image%2020240711154812.png)
+
+传统k8s 
+
+![](image/Pasted%20image%2020240711155004.png)
+
+
+# 3 ConfigMap for EKS Authentification
+
+
+## 3.1 What is AWS IAM Authenticator?
 
 AWS IAM Authenticator is a tool that allows IAM credentials to authenticate and access Kubernetes clusters. In AWS EKS, it runs as a part of the cluster control plane and is managed by AWS as part of their EKS service. You can also use it for non-EKS clusters and create a way to access non-EKS clusters using the AWS IAM service.
 
 
-## 2.1 IAM Authentication in AWS EKS Clusters:
+
+
+
+## 3.2 IAM Authentication in AWS EKS Clusters:
 
 In EKS clusters, all IAM principals are defined in `aws-auth` ConfigMap within `kube-system` namespace. This configuration is managed by both the EKS service and the cluster administrator. EKS edits this config to add/remove IAM Roles for worker nodes to allow them to join the cluster. The cluster admin can also edit this configuration to add/remove additional users/roles to the cluster. So, to add a new principal, we need to edit this resource. You can see a sample configuration here:
 
@@ -65,7 +83,7 @@ mapAccounts is a list of AWS accounts authorized to access the cluster. As you c
 
 ---
 
-
+## 3.3 ivu eks 中的参数 
 ```
  ⚡ 🦄  kubectl describe -n kube-system configmaps aws-auth
 Name:         aws-auth
@@ -100,10 +118,18 @@ Events:  <none>
 ```
 
 
-# 3 EKS Authentication with IAM User setup procedure:
+## 3.4 应用案例 
 
+
+### 3.4.1 join a worker node with master node 
+
+[[../98_01_SetupEKSCluster/98_01_02_使用aws_eks_去创建一个Cluster#2.2.1 join a worker node with master node|98_01_02_使用aws_eks_去创建一个Cluster]]
+
+### 3.4.2 EKS Authentication with IAM User setup procedure:
 
 https://kubedemy.io/aws-eks-part-18-kubernetes-authentication-with-iam-users
+
+见 [[../98_01_SetupEKSCluster/98_01_02_使用aws_eks_去创建一个Cluster#2.2.2 修改并添加 IAM 用户或角色|98_01_02_使用aws_eks_去创建一个Cluster]]
 
 
 
