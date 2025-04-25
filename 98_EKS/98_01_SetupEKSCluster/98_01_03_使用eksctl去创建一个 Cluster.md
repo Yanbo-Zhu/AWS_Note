@@ -88,12 +88,12 @@ subnets  也被创造了
 Cluster, two worker node (maps to 2 instances )
 ![](../image/Pasted%20image%2020240711222530.png)
 
-per node we have  1 coreds, 1 aws-node, 1 kube-porxy 
+per node we have  1 cordns, 1 aws-node, 1 kube-porxy 
 ![](../image/Pasted%20image%2020240711222636.png)
 
 
 
-# 3 将节点组添加到已存在的集群
+# 3 将节点组添加到已存在的集群 eksctl create nodegroup
 
 
 ```
@@ -125,7 +125,7 @@ eksctl create nodegroup \
 ![](../image/Pasted%20image%2020240711131021.png)
 
 
-# 5 通过 http 的方式去访问 eks cluster 中的 dashboard 
+# 5 通过 http 的方式去访问 eks cluster 中的 kubernetes dashboard 
 
 ![](../image/Pasted%20image%2020240711160358.png)
 
@@ -134,7 +134,7 @@ eksctl create nodegroup \
 ![](../image/Pasted%20image%2020240711160427.png)
 
 
-# 6 delete the cluster 
+# 6 eksctl delete cluster 
 
 ![](../image/Pasted%20image%2020240711131054.png)
 
@@ -146,7 +146,7 @@ eksctl create nodegroup \
 
 
 
-# 8 查询信息 eksctl get
+# 8 查询信息 eksctl get cluster/nodegroup 
 
 ```
  ⚡ 🦄  eksctl get cluster --profile ivu-cloud-e2x

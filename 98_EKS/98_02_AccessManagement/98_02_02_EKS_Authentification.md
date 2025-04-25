@@ -39,9 +39,6 @@ Extra: sessionName    [YZH@ivu.de]
 AWS IAM Authenticator is a tool that allows IAM credentials to authenticate and access Kubernetes clusters. In AWS EKS, it runs as a part of the cluster control plane and is managed by AWS as part of their EKS service. You can also use it for non-EKS clusters and create a way to access non-EKS clusters using the AWS IAM service.
 
 
-
-
-
 ## 3.2 IAM Authentication in AWS EKS Clusters:
 
 In EKS clusters, all IAM principals are defined in `aws-auth` ConfigMap within `kube-system` namespace. This configuration is managed by both the EKS service and the cluster administrator. EKS edits this config to add/remove IAM Roles for worker nodes to allow them to join the cluster. The cluster admin can also edit this configuration to add/remove additional users/roles to the cluster. So, to add a new principal, we need to edit this resource. You can see a sample configuration here:

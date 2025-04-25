@@ -371,7 +371,6 @@ EKS 不用特別配置 CNI，建置起來就會準備好 DaemonSet，可以透�
 ![](../image/launch-configuration.png)
 
 
-
 其中 User Data 填入以下，注意 `EKS-CLUSTER-NAME` 記得修改。
 ```
 #!/bin/bash  
@@ -387,8 +386,8 @@ set -o xtrace
 
 建立一個 EC2 ASG，使用前面建立的 LC，如下圖。===特別注意的是 Tag 必續指定如下===：
 - Key: `kubernetes.io/cluster/<CLUSTER_NAME>`, Value: `owned` 
+- 如果沒有指定，Worker Node 就無法加入 Cluster。
 
-如果沒有指定，Worker Node 就無法加入 Cluster。
 ![](image/ec2-auto-scaling-group.png)
 
 

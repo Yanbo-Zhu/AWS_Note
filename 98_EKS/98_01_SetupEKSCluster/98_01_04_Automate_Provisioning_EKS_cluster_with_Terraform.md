@@ -1,6 +1,6 @@
 https://www.bilibili.com/video/BV1rV4y1o7bP/?spm_id_from=333.788.recommend_more_video.-1&vd_source=55e5cc2f534c16c73bbeb684e98c4195
 
-# 1 Create VPC 
+# 1 用 vpc module create VPC 
 
 
 ![](../image/Pasted%20image%2020240712101805.png)
@@ -74,79 +74,13 @@ for services and componets inside the private subnets
 ![](../image/Pasted%20image%2020240712101958.png)
 
 
-
-# 2 Create eks cluster 
-
-1 
-使用的是 terraform registry 中的现成的 tf module 
-![](../image/Pasted%20image%2020240712110449.png)
-
-
-![](../image/Pasted%20image%2020240712110000.png)
-
-2 
-
-![](../image/Pasted%20image%2020240712110655.png)
-
-选的是 Node Group 的方式 
-worker_group参量 
-![](../image/Pasted%20image%2020240712110229.png)
-
-
-3  Configure kubenetes provider
-
-https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#authentication
-
-![](../image/Pasted%20image%2020240712111834.png)
-
-
-get the info of eks-cluster ， 给到 kubenetes provider 
-
-load_config_file  = "false"  # we don't want to load the default .kube/config, we create a new one to use it 
-host 需要的的是 Endpoint of k8s cluster (API Cluster). (Optional) The hostname (in form of URI) of the Kubernetes API. Can be sourced from KUBE_HOST.
-
-
-
-# 3 Check the cluster 和一起产生的 东西 
-
-1 Cluster 
-![](../image/Pasted%20image%2020240712113247.png)
-
-![](../image/Pasted%20image%2020240712113255.png)
-
-
-2 Configuration 
-![](../image/Pasted%20image%2020240712113307.png)
-
-
-3 一起创造出来的 IAM role
-
-![](../image/Pasted%20image%2020240712113354.png)
-
-one for eks 
-one for ec2 
-
-
-4 EC2 instance  
-![](../image/Pasted%20image%2020240712113431.png)
-
-![](../image/Pasted%20image%2020240712113458.png)
-
-
-5 node 是上一节中 通过 worker_group 创造的 
-
-![](../image/Pasted%20image%2020240712113152.png)
-
-
-
-
-# 4 用 vpc module 创造出来的VPC 
+# 2 用 vpc module 创造出来的VPC 都含有什么
 
 ![](../image/Pasted%20image%2020240712113522.png)
 
 
 
-## 4.1 route tables of vpc 
+## 2.1 route tables of vpc 
 
 
 Route table 
@@ -171,7 +105,7 @@ Route table
 
 
 
-### 4.1.1 Route table of VPC 的官方解释 
+### 2.1.1 Route table of VPC 的官方解释 
 
 A short answer:
 Destination: the packet's final destination
@@ -199,7 +133,7 @@ This will route any request with into-the-VPC destination to local targets in th
 The order of the routes is irrelevant since the most specific route will be chosen.
 
 
-## 4.2 随着VPC一起创造的Subnets 
+## 2.2 随着VPC一起创造的Subnets 
 
 ![](../image/Pasted%20image%2020240712114954.png)
 
@@ -207,7 +141,7 @@ The order of the routes is irrelevant since the most specific route will be chos
 
 
 
-## 4.3 随着VPC一起创造出来的Security group
+## 2.3 随着VPC一起创造出来的Security group
 
 
 AWS 中的 **Security Group（安全组）** 是一种**虚拟防火墙**，用于控制进出 Amazon EC2 实例（或其他资源，如 RDS、EKS 节点等）的网络流量。
@@ -256,7 +190,73 @@ This is for the comunication between the Worker node
 
 
 
-# 5 connect one worker node with kubectl
+
+
+# 3 Create eks cluster 
+
+1 
+使用的是 terraform registry 中的现成的 tf module 
+![](../image/Pasted%20image%2020240712110449.png)
+
+
+![](../image/Pasted%20image%2020240712110000.png)
+
+2 
+
+![](../image/Pasted%20image%2020240712110655.png)
+
+选的是 Node Group 的方式 
+worker_group参量 
+![](../image/Pasted%20image%2020240712110229.png)
+
+
+3  Configure kubenetes provider
+
+https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs#authentication
+
+![](../image/Pasted%20image%2020240712111834.png)
+
+
+get the info of eks-cluster ， 给到 kubenetes provider 
+
+load_config_file  = "false"  # we don't want to load the default .kube/config, we create a new one to use it 
+host 需要的的是 Endpoint of k8s cluster (API Cluster). (Optional) The hostname (in form of URI) of the Kubernetes API. Can be sourced from KUBE_HOST.
+
+
+
+## 3.1 Check the cluster 和一起产生的 东西 
+
+1 Cluster 
+![](../image/Pasted%20image%2020240712113247.png)
+
+![](../image/Pasted%20image%2020240712113255.png)
+
+
+2 Configuration 
+![](../image/Pasted%20image%2020240712113307.png)
+
+
+3 一起创造出来的 IAM role
+
+![](../image/Pasted%20image%2020240712113354.png)
+
+one for eks 
+one for ec2 
+
+
+4 EC2 instance  
+![](../image/Pasted%20image%2020240712113431.png)
+
+![](../image/Pasted%20image%2020240712113458.png)
+
+
+5 node 是上一节中 通过 worker_group 创造的 
+
+![](../image/Pasted%20image%2020240712113152.png)
+
+
+
+# 4 connect one worker node with kubectl
 
 ![](../image/Pasted%20image%2020240712115951.png)
 ![](../image/Pasted%20image%2020240712120109.png)
@@ -280,7 +280,7 @@ kubectl get pod
 
 
 
-# 6 deploy a simple application on one worker node 
+# 5 deploy a simple application on one worker node 
 
 ![](../image/Pasted%20image%2020240712120413.png)
 
