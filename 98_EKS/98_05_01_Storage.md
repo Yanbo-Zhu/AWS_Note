@@ -44,6 +44,9 @@
 ## 1.1 如何在 EKS 集群中使用 EBS CSI 驱动
 
 
+
+### 1.1.1 使用 eksctl 
+
 1 安装 EBS CSI Driver（通过 AWS 提供的 Helm chart 或 `eksctl`）
 
 如果还没有 IAM 角色，你可以用 `eksctl` 创建：
@@ -132,6 +135,121 @@ spec:
         claimName: ebs-claim
 ```
 
+
+
+### 1.1.2 使用 Terraform 
+
+
+1 IAM Role for Service Account (IRSA)
+需要先给 driver 创建 IAM 权限。
+```
+resource "aws_iam_policy" "efs_csi_driver" {
+  name        = "AmazonEKS_EFS_CSI_Driver_Policy"
+  description = "EFS CSI driver policy for EKS"
+  policy      = file("efs-csi-driver-policy.json") # 可以从 AWS 官方下载 JSON
+}
+
+resource "aws_iam_role" "efs_csi_driver" {
+  name = "eks-efs-csi-driver-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Service = "eks.amazonaws.com"
+      }
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "efs_csi_driver_attach" {
+  role       = aws_iam_role.efs_csi_driver.name
+  policy_arn = aws_iam_policy.efs_csi_driver.arn
+}
+
+```
+
+
+2 （2）EFS CSI Driver Helm Chart 安装
+
+```
+resource "helm_release" "efs_csi_driver" {
+  name       = "aws-efs-csi-driver"
+  repository = "https://kubernetes-sigs.github.io/aws-efs-csi-driver/"
+  chart      = "aws-efs-csi-driver"
+  namespace  = "kube-system"
+
+  set {
+    name  = "controller.serviceAccount.create"
+    value = "false"
+  }
+
+  set {
+    name  = "controller.serviceAccount.name"
+    value = "efs-csi-controller-sa"  # 这里要和你上面创建的 ServiceAccount 对应
+  }
+
+  set {
+    name  = "region"
+    value = var.region
+  }
+}
+```
+
+
+或者用 直接用  resource "aws_eks_addon" 
+
+```
+resource "aws_eks_addon" "aws_efs_csi_driver" {
+  cluster_name                = aws_eks_cluster.cluster.name
+  addon_name                  = "aws-efs-csi-driver"
+  addon_version               = var.addon_versions["aws-efs-csi-driver"]
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
+  service_account_role_arn    = aws_iam_role.service_accounts["aws-efs-csi-driver"].arn
+
+  depends_on = [
+    aws_eks_node_group.all,
+    aws_efs_mount_target.efs_csi
+  ]
+}
+```
+
+
+
+3 创建 StorageClass
+```
+resource "kubernetes_storage_class" "efs" {
+  metadata {
+    name = "efs-sc"
+  }
+
+  provisioner = "efs.csi.aws.com"
+
+  reclaim_policy = "Retain"
+  volume_binding_mode = "Immediate"
+}
+
+```
+
+
+
+4 然后，你就可以在 Kubernetes 中像下面这样申请 PVC 了：
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: efs-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  resources:
+    requests:
+      storage: 5Gi
+```
 
 # 2 使用 RDS
 

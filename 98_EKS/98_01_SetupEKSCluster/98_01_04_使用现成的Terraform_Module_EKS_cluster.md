@@ -191,7 +191,6 @@ This is for the comunication between the Worker node
 
 
 
-
 # 3 Create eks cluster 
 
 1 
