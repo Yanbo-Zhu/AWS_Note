@@ -4,8 +4,6 @@ https://www.bilibili.com/video/BV1Fs4y1d7qP/?spm_id_from=333.337.search-card.all
 ![](../image/Pasted%20image%2020240711204230.png)
 
 
-
-
 # 1 Create EKS IAM Role
 
 ![](../image/Pasted%20image%2020240711204416.png)
@@ -16,10 +14,10 @@ https://www.bilibili.com/video/BV1Fs4y1d7qP/?spm_id_from=333.337.search-card.all
 
 # 2 create VPC for EKS worker node 
 
-why do need another VPC: EKS cluster  needs specific networking configuration 
+why do need another VPC: EKS cluster needs specific networking configuration 
 
 1 
-Worker Nodes need specific Firewall configurations, sothat the Master Node can communicate the Worker Node 
+Worker Nodes need specific Firewall configurations, so that the Master Node can communicate the Worker Node 
 ![](../image/Pasted%20image%2020240711205658.png)
 
 Bes practice : configure Public Subnet and Private Subnet 
@@ -52,6 +50,7 @@ Template 下载
 
 # 3 create a eks cluster (master node)
 
+
 ![](../image/Pasted%20image%2020240711211103.png)
 
 
@@ -63,6 +62,7 @@ Giving the networking info of worker nodes
 
 
 ----
+
 public and private mode of entrypoint 
 
 ![](../image/Pasted%20image%2020240711211647.png)
@@ -71,6 +71,7 @@ public and private mode of entrypoint
 
 
 ---
+
 Logging through Cloudwatch logs 
 
 ![](../image/Pasted%20image%2020240711211730.png)
@@ -98,11 +99,7 @@ create kubeconfig file
 
 # 5 Create Node Groups for generating the Pods
 
-
 With Node Group all necessary processes are automatically installed, 比如说 Containerd, kubelet , kube-proxy in Worker Node , 我们自己就不用费劲去手动安装了. 
-
-
-
 
 ![](../image/Pasted%20image%2020240711213354.png)
 
@@ -147,19 +144,6 @@ A EC2 Role that policies are attacthed to it so that kubelet has the permission 
 ![](../image/Pasted%20image%2020240711215157.png)
 
 ![](../image/Pasted%20image%2020240711215321.png)
-
-
-
-
-
- 
-
-
-
-
-
-
-
 
 
 

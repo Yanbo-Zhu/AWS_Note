@@ -13,7 +13,7 @@ https://docs.aws.amazon.com/vpc/latest/userguide/managed-prefix-lists.html
 https://docs.aws.amazon.com/vpc/latest/userguide/working-with-aws-managed-prefix-lists.html
 
 AWS-managed prefix lists are created and maintained by AWS and are available to anyone with an AWS account. 
-这里面的内容 是 aws 自己创造的 ， 不是我们认为 输入的 
+这里面的内容 是 aws 自己创造的 ， 不是我们人为  输入的 
 ==A prefix list is a collection of one or more IP CIDR blocks used to simplify the configuration and management of security groups and routing tables.==
 
 There are customer-managed prefix lists and AWS-managed prefix lists. **This blog post focuses on AWS-managed prefix lists for Amazon CloudFront.**
