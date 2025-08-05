@@ -1,4 +1,8 @@
 
+关于 aws alb, nlb 的解释见 D:\File_Storage\File_Markdown\AWS_Certification_Training\03_AWS_Architecting_on_AWS\2023-10-03\Modul_7_Monitoring_LoadBalancing_Scaling\Modul_7_2_Load Balancing.md
+
+
+
 # 1 Ingress_Controller_with_AWS_LoadBalancer
 
 ALB:  AWS Applicatiob Load balancer 
